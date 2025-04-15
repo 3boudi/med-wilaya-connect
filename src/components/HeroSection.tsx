@@ -17,20 +17,26 @@ const HeroSection = () => {
     const illustration = illustrationRef.current;
 
     if (title && description && cta && illustration) {
-      title.classList.add("animate-fade-in");
+      setTimeout(() => {
+        title.classList.add("animate-fade-in");
+        title.style.opacity = "1";
+      }, 100);
       
       // Add a small delay for staggered animation
       setTimeout(() => {
         description.classList.add("animate-fade-in");
-      }, 200);
+        description.style.opacity = "1";
+      }, 300);
       
       setTimeout(() => {
         cta.classList.add("animate-fade-in");
-      }, 400);
+        cta.style.opacity = "1";
+      }, 500);
       
       setTimeout(() => {
         illustration.classList.add("animate-fade-in");
-      }, 600);
+        illustration.style.opacity = "1";
+      }, 700);
     }
   }, []);
 
@@ -44,7 +50,8 @@ const HeroSection = () => {
         <div className="w-full lg:w-1/2 mb-10 lg:mb-0 lg:pr-10">
           <h1
             ref={titleRef}
-            className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-800 opacity-0"
+            className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-800"
+            style={{ opacity: 0, transition: "opacity 0.5s ease-out, transform 0.5s ease-out" }}
           >
             Find Doctors Near You in{" "}
             <span className="text-medical-primary">Any Wilaya</span>
@@ -52,7 +59,8 @@ const HeroSection = () => {
           
           <p
             ref={descriptionRef}
-            className="mt-6 text-lg md:text-xl text-gray-600 max-w-2xl opacity-0"
+            className="mt-6 text-lg md:text-xl text-gray-600 max-w-2xl"
+            style={{ opacity: 0, transition: "opacity 0.5s ease-out, transform 0.5s ease-out" }}
           >
             Connect with local doctors or those in other regions, communicate directly
             with them or their assistants, and book appointments easily through our
@@ -61,7 +69,8 @@ const HeroSection = () => {
           
           <div
             ref={ctaRef}
-            className="mt-8 flex flex-col sm:flex-row gap-4 opacity-0"
+            className="mt-8 flex flex-col sm:flex-row gap-4"
+            style={{ opacity: 0, transition: "opacity 0.5s ease-out, transform 0.5s ease-out" }}
           >
             <a href="#features" className="btn-primary">
               Explore Features
@@ -74,7 +83,8 @@ const HeroSection = () => {
         
         <div
           ref={illustrationRef}
-          className="w-full lg:w-1/2 flex justify-center opacity-0"
+          className="w-full lg:w-1/2 flex justify-center"
+          style={{ opacity: 0, transition: "opacity 0.5s ease-out, transform 0.5s ease-out" }}
         >
           <AnimatedIllustration type="doctor" className="w-full max-w-md" />
         </div>

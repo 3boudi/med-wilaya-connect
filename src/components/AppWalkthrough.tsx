@@ -5,6 +5,7 @@ import { Check } from "lucide-react";
 const AppWalkthrough = () => {
   const [activeStep, setActiveStep] = useState(1);
   const sectionRef = useRef<HTMLDivElement>(null);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const steps = [
     {
@@ -41,12 +42,19 @@ const AppWalkthrough = () => {
     const handleScroll = () => {
       if (sectionRef.current) {
         const rect = sectionRef.current.getBoundingClientRect();
-        if (rect.top <= window.innerHeight * 0.5 && rect.bottom >= 0) {
-          // Start auto-advancing through steps
-          const interval = setInterval(() => {
-            setActiveStep((prev) => (prev % 4) + 1);
-          }, 3000);
-          return () => clearInterval(interval);
+        if (rect.top <= window.innerHeight * 0.7 && rect.bottom >= window.innerHeight * 0.3) {
+          // Start auto-advancing through steps if not already started
+          if (!intervalRef.current) {
+            intervalRef.current = setInterval(() => {
+              setActiveStep((prev) => (prev % 4) + 1);
+            }, 3000);
+          }
+        } else {
+          // Clear interval when section is not in view
+          if (intervalRef.current) {
+            clearInterval(intervalRef.current);
+            intervalRef.current = null;
+          }
         }
       }
     };
@@ -56,11 +64,14 @@ const AppWalkthrough = () => {
     
     return () => {
       window.removeEventListener("scroll", handleScroll);
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
     };
   }, []);
 
   return (
-    <section id="walkthrough" className="py-20 bg-gradient-to-br from-medical-light/50 to-white">
+    <section id="walkthrough" className="py-20 bg-gradient-to-br from-medical-light/50 to-white overflow-hidden">
       <div className="section-container" ref={sectionRef}>
         <h2 className="section-title">
           How <span className="text-medical-primary">It Works</span>
@@ -73,29 +84,25 @@ const AppWalkthrough = () => {
         
         <div className="flex flex-col lg:flex-row items-center gap-12">
           <div className="w-full lg:w-1/2 order-2 lg:order-1">
-            <div className="bg-white rounded-2xl shadow-xl p-8 h-[400px] flex flex-col justify-center relative">
+            <div className="bg-white rounded-2xl shadow-xl p-8 h-[400px] flex items-center justify-center relative overflow-hidden">
               {steps.map((step) => (
                 <div
                   key={step.number}
-                  className={`transition-all duration-500 ${
+                  className={`absolute inset-0 p-8 flex flex-col justify-center transition-all duration-500 ${
                     activeStep === step.number
-                      ? "opacity-100 transform translate-y-0 relative"
-                      : "opacity-0 absolute top-0 left-0 right-0"
+                      ? "opacity-100 transform translate-y-0 z-10"
+                      : "opacity-0 transform translate-y-8 z-0"
                   }`}
                 >
-                  {activeStep === step.number && (
-                    <>
-                      <h3 className="text-2xl font-bold mb-3 text-medical-primary">
-                        {step.title}
-                      </h3>
-                      <p className="text-gray-600 mb-6">{step.description}</p>
-                      <img
-                        src={step.image}
-                        alt={step.title}
-                        className="rounded-lg max-h-40 mx-auto"
-                      />
-                    </>
-                  )}
+                  <h3 className="text-2xl font-bold mb-3 text-medical-primary">
+                    {step.title}
+                  </h3>
+                  <p className="text-gray-600 mb-6">{step.description}</p>
+                  <img
+                    src={step.image}
+                    alt={step.title}
+                    className="rounded-lg max-h-40 mx-auto"
+                  />
                 </div>
               ))}
             </div>

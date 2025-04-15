@@ -73,14 +73,14 @@ const AppWalkthrough = () => {
         
         <div className="flex flex-col lg:flex-row items-center gap-12">
           <div className="w-full lg:w-1/2 order-2 lg:order-1">
-            <div className="bg-white rounded-2xl shadow-xl p-8 h-[400px] flex flex-col justify-center transition-all duration-500">
+            <div className="bg-white rounded-2xl shadow-xl p-8 h-[400px] flex flex-col justify-center relative">
               {steps.map((step) => (
                 <div
                   key={step.number}
                   className={`transition-all duration-500 ${
                     activeStep === step.number
-                      ? "opacity-100 transform translate-y-0"
-                      : "opacity-0 absolute"
+                      ? "opacity-100 transform translate-y-0 relative"
+                      : "opacity-0 absolute top-0 left-0 right-0"
                   }`}
                 >
                   {activeStep === step.number && (
